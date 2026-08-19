@@ -18,6 +18,10 @@
 
 * { box-sizing: border-box; }
 
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: "Manrope", "Segoe UI", sans-serif;
@@ -31,6 +35,8 @@ a { color: inherit; text-decoration: none; }
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
+  min-height: 100dvh;
+  align-items: stretch;
 }
 
 .sidebar {
@@ -40,6 +46,13 @@ a { color: inherit; text-decoration: none; }
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .brand {
@@ -47,6 +60,53 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 12px;
   padding: 0 10px 28px;
+}
+
+.sidebar-close,
+.menu-toggle {
+  display: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.menu-toggle {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: white;
+  border: 1px solid var(--line);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+.sidebar-close {
+  margin-left: auto;
+  color: white;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sidebar-overlay {
+  display: none;
 }
 
 .brand-mark {
@@ -88,11 +148,16 @@ a { color: inherit; text-decoration: none; }
   color: white;
 }
 
+.sidebar nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .sidebar-footer {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 24px;
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 16px;
 }
 
 .main {
@@ -126,7 +191,7 @@ a { color: inherit; text-decoration: none; }
 
 .stat-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr;
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -245,11 +310,57 @@ a { color: inherit; text-decoration: none; }
   padding: 16px;
 }
 
-@media (max-width: 992px) {
-  .app-shell { grid-template-columns: 1fr; }
-  .sidebar { position: relative; height: auto; }
-  .sidebar-footer { position: static; margin-top: 24px; }
+@media (min-width: 768px) {
   .stat-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 1200px) {
+  .stat-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 992px) {
+  .app-shell {
+    display: block;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .menu-toggle { display: flex; }
+  .sidebar-close { display: block; }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(280px, 86vw);
+    height: auto;
+    max-height: none;
+    overflow: hidden;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .sidebar-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .main { padding: 20px 16px 40px; }
+  .topbar { flex-wrap: wrap; align-items: flex-start; }
   .auth-wrap { grid-template-columns: 1fr; }
   .auth-hero { display: none; }
+}
+
+@media (max-width: 576px) {
+  .stat-grid { grid-template-columns: 1fr; }
+  .page-title h2 { font-size: 1.25rem; }
 }

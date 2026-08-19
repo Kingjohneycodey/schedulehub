@@ -18,4 +18,20 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("sidebar-overlay");
+  const openBtn = document.getElementById("menu-toggle");
+  const closeBtn = document.getElementById("sidebar-close");
+  const closeMenu = () => {
+    sidebar?.classList.remove("open");
+    overlay?.classList.remove("show");
+  };
+  const openMenu = () => {
+    sidebar?.classList.add("open");
+    overlay?.classList.add("show");
+  };
+  openBtn?.addEventListener("click", openMenu);
+  closeBtn?.addEventListener("click", closeMenu);
+  overlay?.addEventListener("click", closeMenu);
 });
