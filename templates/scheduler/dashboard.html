@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+{% block subtitle %}Today’s picture of {{ business.name }}{% endblock %}
+{% block actions %}
+<a class="btn btn-accent" href="{% url 'scheduler:appointment-create' %}">New appointment</a>
+{% endblock %}
+
+{% block content %}
+<div class="stat-grid">
+  <div class="card stat-card">
+    <span>Today’s appointments</span>
+    <strong>{{ today_count }}</strong>
+  </div>
+  <div class="card stat-card">
+    <span>Upcoming</span>
+    <strong>{{ upcoming_count }}</strong>
+  </div>
+  <div class="card stat-card">
+    <span>Customers</span>
+    <strong>{{ customer_count }}</strong>
+  </div>
+  <div class="card stat-card">
+    <span>Active services</span>
+    <strong>{{ service_count }}</strong>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-7">
+    <div class="card p-4">
+      <h5 class="fw-bold mb-3">This week</h5>
+      <canvas id="weekChart" height="180"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card p-4">
+      <h5 class="fw-bold mb-3">By service</h5>
+      <canvas id="serviceChart" height="180"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card p-4">
+      <h5 class="fw-bold mb-3">Today’s schedule</h5>
+      {% if today_schedule %}
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Client</th>
+                <th>Service</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in today_schedule %}
+                <tr>
+                  <td>{{ item.start_time|time:"H:i" }} – {{ item.end_time|time:"H:i" }}</td>
+                  <td>
+                    <a href="{{ item.get_absolute_url }}">{{ item.customer.full_name }}</a>
+                    {% if item.customer.company %}<div class="small text-muted">{{ item.customer.company }}</div>{% endif %}
+                  </td>
+                  <td>{{ item.service.name }}</td>
+                  <td><span class="badge-status badge-{{ item.status }}">{{ item.get_status_display }}</span></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state">No appointments on the calendar for today.</div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card p-4">
+      <h5 class="fw-bold mb-3">Coming up</h5>
+      {% for item in upcoming_list %}
+        <a class="d-block mb-3" href="{{ item.get_absolute_url }}">
+          <div class="fw-bold">{{ item.customer.full_name }}</div>
+          <div class="small text-muted">{{ item.date }} · {{ item.start_time|time:"H:i" }} · {{ item.service.name }}</div>
+        </a>
+      {% empty %}
+        <div class="text-muted">Nothing upcoming yet.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+const weekCtx = document.getElementById("weekChart");
+new Chart(weekCtx, {
+  type: "bar",
+  data: {
+    labels: {{ week_labels|safe }},
+    datasets: [{
+      label: "Appointments",
+      data: {{ week_data|safe }},
+      backgroundColor: "#0d9488",
+      borderRadius: 8,
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, ticks: { stepSize: 1 } }
+    }
+  }
+});
+
+const svcCtx = document.getElementById("serviceChart");
+new Chart(svcCtx, {
+  type: "doughnut",
+  data: {
+    labels: {{ service_labels|safe }},
+    datasets: [{
+      data: {{ service_data|safe }},
+      backgroundColor: [
+        "#0d9488", "#2563eb", "#d97706", "#059669",
+        "#dc2626", "#7c3aed", "#0891b2", "#ea580c"
+      ],
+    }]
+  },
+  options: {
+    plugins: { legend: { position: "bottom", labels: { boxWidth: 12 } } }
+  }
+});
+</script>
+{% endblock %}

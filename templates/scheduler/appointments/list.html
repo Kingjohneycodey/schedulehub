@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments{% endblock %}
+{% block heading %}Appointments{% endblock %}
+{% block subtitle %}Create, reschedule, and cancel client meetings{% endblock %}
+{% block actions %}
+<a class="btn btn-accent" href="{% url 'scheduler:appointment-create' %}">New appointment</a>
+{% endblock %}
+
+{% block content %}
+<div class="card p-4 mb-3">
+  <form class="row g-2" method="get" id="filter-form">
+    <div class="col-md-7">
+      <input class="form-control auto-submit" name="q" value="{{ search }}" placeholder="Search client, company, or service">
+    </div>
+    <div class="col-md-5">
+      <select class="form-select auto-submit" name="status">
+        <option value="">All statuses</option>
+        {% for value, label in statuses %}
+          <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+</div>
+
+<div class="card p-0 overflow-hidden">
+  {% if appointments %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Client</th>
+            <th>Service</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in appointments %}
+            <tr>
+              <td>{{ item.date }}</td>
+              <td>{{ item.start_time|time:"H:i" }} – {{ item.end_time|time:"H:i" }}</td>
+              <td><a href="{{ item.get_absolute_url }}">{{ item.customer.full_name }}</a></td>
+              <td>{{ item.service.name }}</td>
+              <td><span class="badge-status badge-{{ item.status }}">{{ item.get_status_display }}</span></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">No appointments match this filter.</div>
+  {% endif %}
+</div>
+{% include "includes/pagination.html" %}
+{% endblock %}

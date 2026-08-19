@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block heading %}{{ title }}{% endblock %}
+{% block subtitle %}Only free slots inside working hours are shown{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <form method="post">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Customer</label>
+        {{ form.customer }}
+        {% for error in form.customer.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Service</label>
+        {{ form.service }}
+        {% for error in form.service.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Date</label>
+        {{ form.date }}
+        {% for error in form.date.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Status</label>
+        {{ form.status }}
+      </div>
+      <div class="col-12">
+        <label class="form-label">Available times</label>
+        {{ form.start_time }}
+        {% for error in form.start_time.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        <div id="slot-message" class="small text-muted mb-2">Choose a service and date.</div>
+        <div id="slot-box" class="slot-grid" data-appointment="{{ appointment.pk|default:'' }}"></div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Notes</label>
+        {{ form.notes }}
+      </div>
+    </div>
+    <div class="mt-4 d-flex gap-2">
+      <button class="btn btn-accent" type="submit">Save appointment</button>
+      <a class="btn btn-outline-secondary" href="{% url 'scheduler:appointment-list' %}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/booking.js' %}"></script>
+{% endblock %}

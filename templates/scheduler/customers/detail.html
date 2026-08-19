@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ customer.full_name }}{% endblock %}
+{% block heading %}{{ customer.full_name }}{% endblock %}
+{% block subtitle %}{{ customer.company|default:customer.email }}{% endblock %}
+{% block actions %}
+<a class="btn btn-accent" href="{% url 'scheduler:appointment-create' %}?customer={{ customer.pk }}">Book meeting</a>
+<a class="btn btn-outline-dark" href="{% url 'scheduler:customer-update' customer.pk %}">Edit</a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card p-4">
+      <p><strong>Email:</strong> {{ customer.email }}</p>
+      <p><strong>Phone:</strong> {{ customer.phone|default:"—" }}</p>
+      <p><strong>Company:</strong> {{ customer.company|default:"—" }}</p>
+      <p class="mb-0"><strong>Notes:</strong> {{ customer.notes|default:"—" }}</p>
+      <form method="post" action="{% url 'scheduler:customer-delete' customer.pk %}" class="mt-4">
+        {% csrf_token %}
+        <button class="btn btn-outline-danger" type="submit" onclick="return confirm('Remove this customer?')">Delete customer</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card p-4">
+      <h5 class="fw-bold mb-3">Appointment history</h5>
+      {% if history %}
+        <table class="table">
+          <thead>
+            <tr><th>Date</th><th>Service</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            {% for item in history %}
+              <tr>
+                <td><a href="{{ item.get_absolute_url }}">{{ item.date }} {{ item.start_time|time:"H:i" }}</a></td>
+                <td>{{ item.service.name }}</td>
+                <td><span class="badge-status badge-{{ item.status }}">{{ item.get_status_display }}</span></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="text-muted">No meetings recorded yet.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

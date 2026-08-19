@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Delete service{% endblock %}
+{% block heading %}Delete service{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+  <p>Delete <strong>{{ service.name }}</strong>? If it already has appointments, deactivate it instead.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Delete</button>
+    <a class="btn btn-outline-secondary" href="{% url 'scheduler:service-list' %}">Keep service</a>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Calendar{% endblock %}
+{% block heading %}Calendar{% endblock %}
+{% block subtitle %}Day, week, and month views of your appointments{% endblock %}
+{% block actions %}
+<a class="btn btn-accent" href="{% url 'scheduler:appointment-create' %}">New appointment</a>
+{% endblock %}
+
+{% block content %}
+<div class="card p-3">
+  <div id="calendar"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script src="{% static 'js/calendar.js' %}"></script>
+{% endblock %}

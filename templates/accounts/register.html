@@ -1,0 +1,36 @@
+{% extends "accounts/auth_base.html" %}
+
+{% block title %}Register · ScheduleHub{% endblock %}
+
+{% block body %}
+<div class="auth-wrap">
+  <section class="auth-hero">
+    <h2 class="display-6 fw-bold">Set up ScheduleHub for your business.</h2>
+    <p class="lead mt-3" style="color:#cbd5e1">Registration creates your workspace, working hours, and starter services. Use your own business name.</p>
+  </section>
+  <section class="auth-panel">
+    <div class="auth-card">
+      <a href="{% url 'accounts:landing' %}" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; margin-bottom:24px;">
+        <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,#0d9488,#38bdf8); display:grid; place-items:center; color:white; font-weight:800; font-size:0.85rem;">SH</div>
+        <span style="font-weight:800; font-size:1.1rem;">ScheduleHub</span>
+      </a>
+      <h3 class="fw-bold mb-1">Create business account</h3>
+    
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+        {% endfor %}
+        <button class="btn btn-accent w-100" type="submit">Create workspace</button>
+      </form>
+      <p class="text-center mt-3 mb-0 text-muted">
+        Already registered? <a href="{% url 'accounts:login' %}" style="color:#2563eb">Log in</a>
+      </p>
+    </div>
+  </section>
+</div>
+{% endblock %}

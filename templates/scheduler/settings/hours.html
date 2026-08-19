@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Working hours{% endblock %}
+{% block heading %}Working hours{% endblock %}
+{% block subtitle %}Appointments can only start inside these hours{% endblock %}
+
+{% block content %}
+<ul class="nav nav-pills mb-4">
+  <li class="nav-item"><a class="nav-link" href="{% url 'scheduler:settings-business' %}">Profile</a></li>
+  <li class="nav-item"><a class="nav-link active" href="{% url 'scheduler:settings-hours' %}">Working hours</a></li>
+  <li class="nav-item"><a class="nav-link" href="{% url 'scheduler:settings-blocked' %}">Blocked dates</a></li>
+</ul>
+
+<div class="card p-4">
+  <form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Open</th>
+            <th>Opens</th>
+            <th>Closes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for form in formset %}
+            <tr>
+              {{ form.id }}
+              {{ form.weekday }}
+              <td class="fw-bold">{{ form.instance.get_weekday_display }}</td>
+              <td>{{ form.is_open }}</td>
+              <td>{{ form.open_time }}</td>
+              <td>{{ form.close_time }}</td>
+            </tr>
+            {% if form.errors %}
+              <tr><td colspan="4" class="text-danger small">{{ form.errors }}</td></tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <button class="btn btn-accent" type="submit">Save hours</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScheduleHub — Personal Business Scheduling</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #0d9488;
+      --accent-2: #14b8a6;
+      --dark: #0b1220;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Manrope", sans-serif; color: #0f172a; overflow-x: hidden; }
+
+    .landing-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .landing-nav .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; }
+    .landing-nav .logo-mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), #38bdf8);
+      display: grid; place-items: center; color: white; font-weight: 800; font-size: 0.85rem;
+    }
+    .landing-nav .nav-links { display: flex; gap: 12px; }
+    .landing-nav .nav-links a { padding: 9px 18px; border-radius: 10px; font-weight: 600; font-size: 0.9rem; }
+    .btn-accent { background: var(--accent); color: white; border: none; }
+    .btn-accent:hover { background: #0f766e; color: white; }
+
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 140px 24px 80px;
+      background: radial-gradient(ellipse at top, #f0fdfa 0%, #f8fafc 60%);
+    }
+    .hero h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 800; line-height: 1.15; max-width: 780px; margin: 0 auto 24px; }
+    .hero h1 span { color: var(--accent); }
+    .hero p { font-size: 1.15rem; color: #475569; max-width: 580px; margin: 0 auto 36px; }
+    .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-buttons a { padding: 14px 28px; border-radius: 14px; font-weight: 700; font-size: 1rem; }
+    .hero-badge { display: inline-block; background: #f0fdf4; color: #166534; padding: 6px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; margin-bottom: 20px; }
+
+    .features { padding: 100px 24px; background: white; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; max-width: 1100px; margin: 0 auto; }
+    .feature-card { padding: 32px; border-radius: 20px; border: 1px solid #e2e8f0; transition: box-shadow 0.2s; }
+    .feature-card:hover { box-shadow: 0 12px 40px rgba(15,23,42,0.07); }
+    .feature-icon { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; font-size: 1.4rem; margin-bottom: 16px; }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { color: #64748b; margin: 0; line-height: 1.6; }
+
+    .how-it-works { padding: 100px 24px; background: #f8fafc; text-align: center; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; max-width: 900px; margin: 48px auto 0; }
+    .step-num { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: white; display: grid; place-items: center; font-weight: 800; margin: 0 auto 16px; }
+    .step h4 { font-weight: 700; margin-bottom: 6px; }
+    .step p { color: #64748b; font-size: 0.95rem; }
+
+    .cta {
+      padding: 100px 24px; text-align: center;
+      background: linear-gradient(135deg, var(--dark), #1e293b);
+      color: white;
+    }
+    .cta h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 16px; }
+    .cta p { color: #94a3b8; max-width: 500px; margin: 0 auto 32px; font-size: 1.05rem; }
+
+    .landing-footer { padding: 32px 40px; background: var(--dark); color: #94a3b8; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+
+    @media (max-width: 768px) {
+      .landing-nav { padding: 14px 20px; }
+      .hero { padding: 120px 20px 60px; }
+      .landing-footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="landing-nav">
+  <div class="logo">
+    <div class="logo-mark">SH</div>
+    ScheduleHub
+  </div>
+  <div class="nav-links">
+    <a href="{% url 'accounts:login' %}" class="btn btn-outline-dark">Log in</a>
+    <a href="{% url 'accounts:register' %}" class="btn btn-accent">Get started</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div>
+    <div class="hero-badge">Now available — free to use</div>
+    <h1>Your personal <span>business scheduler</span>, without the hassle.</h1>
+    <p>Create appointments, manage clients, protect working hours, and never double-book again. An internal tool just for you — no public booking page needed.</p>
+    <div class="hero-buttons">
+      <a href="{% url 'accounts:register' %}" class="btn btn-accent">Create your workspace</a>
+      <a href="{% url 'accounts:login' %}" class="btn btn-outline-dark">Log in</a>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div style="text-align:center; max-width:600px; margin:0 auto 56px;">
+    <h2 style="font-size:2rem; font-weight:800;">Everything you need to schedule smart</h2>
+    <p style="color:#64748b; margin-top:12px;">No public booking links. No client logins. Just you managing your time.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#f0fdfa; color:#0d9488;">&#128197;</div>
+      <h3>Smart scheduling</h3>
+      <p>Only available time slots are shown. Django checks working hours, blocked dates, and existing appointments before confirming.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#eff6ff; color:#2563eb;">&#128101;</div>
+      <h3>Client management</h3>
+      <p>Keep a record of every client with their contact info, company, notes, and full appointment history in one place.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#fefce8; color:#d97706;">&#128338;</div>
+      <h3>Working hours</h3>
+      <p>Define your availability per weekday. Block holidays and offsites. Appointments can only land inside open hours.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#fdf2f8; color:#db2777;">&#128202;</div>
+      <h3>Dashboard & charts</h3>
+      <p>See today's schedule, upcoming appointments, weekly trends, and service breakdown at a glance.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#f5f3ff; color:#7c3aed;">&#128467;&#65039;</div>
+      <h3>Calendar view</h3>
+      <p>Day, week, and month views powered by FullCalendar. Click any appointment to see details or reschedule.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#ecfdf5; color:#059669;">&#128275;</div>
+      <h3>No double-booking</h3>
+      <p>The system prevents overlapping appointments automatically. Cancelled bookings free their slot instantly.</p>
+    </div>
+  </div>
+</section>
+
+<section class="how-it-works">
+  <h2 style="font-size:2rem; font-weight:800;">How it works</h2>
+  <p style="color:#64748b; margin-top:8px;">Three steps to a fully managed schedule.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>Create your workspace</h4>
+      <p>Register with your business name. Default working hours and services are set up for you.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>Add your clients</h4>
+      <p>Store client details — name, email, company — so you can schedule meetings quickly.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>Book appointments</h4>
+      <p>Pick a client, a service, and a date. Only free slots are shown. Confirm and you're done.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to take control of your schedule?</h2>
+  <p>Set up in under a minute. No credit card, no complex config.</p>
+  <a href="{% url 'accounts:register' %}" class="btn btn-accent" style="padding:14px 32px; border-radius:14px; font-weight:700; font-size:1.05rem;">Create your workspace</a>
+</section>
+
+<footer class="landing-footer">
+  <span>&copy; 2026 ScheduleHub. All rights reserved.</span>
+  <span>&copy; <a href="https://ahiakwojohn.vercel.app" target="_blank" style="color:#14b8a6">Ahiakwo John</a></span>
+</footer>
+
+</body>
+</html>
