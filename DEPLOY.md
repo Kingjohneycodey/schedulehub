@@ -87,10 +87,10 @@ python manage.py seed_demo
 Quick test:
 
 ```bash
-gunicorn schedulehub.wsgi:application --bind 0.0.0.0:8000
+gunicorn schedulehub.wsgi:application --bind 0.0.0.0:8100
 ```
 
-Then `curl http://localhost:8000` — you should get HTML. Press Ctrl+C to stop.
+Then `curl http://localhost:8100` — you should get HTML. Press Ctrl+C to stop.
 
 ---
 
@@ -111,7 +111,7 @@ After=network.target
 User=root
 WorkingDirectory=/var/www/schedulehub
 EnvironmentFile=/var/www/schedulehub/.env
-ExecStart=/var/www/schedulehub/venv/bin/gunicorn schedulehub.wsgi:application --bind 127.0.0.1:8000 --workers 3
+ExecStart=/var/www/schedulehub/venv/bin/gunicorn schedulehub.wsgi:application --bind 127.0.0.1:8100 --workers 3
 Restart=always
 RestartSec=3
 
@@ -131,7 +131,7 @@ sudo systemctl status schedulehub
 Check it's running:
 
 ```bash
-curl http://localhost:8000
+curl http://localhost:8100
 ```
 
 ---
@@ -172,7 +172,7 @@ server {
     }
 
     location / {
-        proxy_pass http://127.0.0.1:8000;
+        proxy_pass http://127.0.0.1:8100;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
